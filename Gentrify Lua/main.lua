@@ -251,29 +251,41 @@ end
 
 --new tenant chance
 function newTenantChance()
-	local n = tenantTotal + .01
-	local y = n/(n^2+30*n)^(1/2)
-	local x = math.random()
-	local z = math.random()
-	if tenantTotal < tenantMax then
-		if z < 0.1 then
-			tenantN = 5;
-		elseif z >= 0.1 and z < 0.3 then
-			tenantN = 4;
-		elseif z >= 0.3 and z < 0.6 then
-			tenantN = 3;
-		else 
-			tenantN = 2;
+	if turn == 1 then
+		tenantChance = 1;
+		tenantN = 3;
+		print("New tenant");
+		matchCheck();
+	elseif turn == 2 then
+		tenantChance = 1;
+		tenantN = 4;
+		print("New tenant");
+		matchCheck();		
+	else
+		local n = tenantTotal + .01
+		local y = n/(n^2+30*n)^(1/2)
+		local x = math.random()
+		local z = math.random()
+		if tenantTotal < tenantMax then
+			if z < 0.1 then
+				tenantN = 5;
+			elseif z >= 0.1 and z < 0.3 then
+				tenantN = 4;
+			elseif z >= 0.3 and z < 0.6 then
+				tenantN = 3;
+			else 
+				tenantN = 2;
+			end
+			if x > y then
+				tenantChance = 1;
+				print("New tenant");
+				matchCheck();
+			else
+				tenantChance = 0;
+				print("No tenant");
+			end
 		end
-		if x > y then
-			tenantChance = 1;
-			print("New tenant");
-			matchCheck();
-		else
-			tenantChance = 0;
-			print("No tenant");
-		end
-	end	
+	end
 end
 
 --check if compatible, print tenant stats 
@@ -1178,7 +1190,7 @@ function renderStaticButtons()
 		if mx >= staticbuttons[i]["x"] and mx < staticbuttons[i]["x"] + staticbuttons[i]["img1"]:getWidth()
 		and my >= staticbuttons[i]["y"] and my < staticbuttons[i]["y"] + staticbuttons[i]["img1"]:getHeight() then
 			love.graphics.draw(staticbuttons[i]["img2"], staticbuttons[i]["x"], staticbuttons[i]["y"], 0, 1, 1);
-			if love.mouse.isDown("l") then
+			if love.mouse.isDown(1) then
 				love.graphics.draw(staticbuttons[i]["img3"], staticbuttons[i]["x"], staticbuttons[i]["y"], 0, 1, 1);
 			end
 		end
@@ -1192,7 +1204,7 @@ function renderDoorButtons()
 		if mx >= doorbuttons[i]["x"] and mx < doorbuttons[i]["x"] + doorbuttons[i]["img1"]:getWidth()
 		and my >= doorbuttons[i]["y"] and my < doorbuttons[i]["y"] + doorbuttons[i]["img1"]:getHeight() then
 			love.graphics.draw(doorbuttons[i]["img2"], doorbuttons[i]["x"], doorbuttons[i]["y"], 0, 1, 1);
-			if love.mouse.isDown(l) then
+			if love.mouse.isDown(1) then
 				love.graphics.draw(doorbuttons[i]["img3"], doorbuttons[i]["x"], doorbuttons[i]["y"], 0, 1, 1);
 			end
 		end
@@ -1259,7 +1271,7 @@ function renderEvictButtons(x)
 		if mx >= gridx and mx < gridx + gridbuttons["evictbutton"]["img1"]:getWidth()
 		and my >= gridy and my < gridy + gridbuttons["evictbutton"]["img1"]:getHeight() then
 			love.graphics.draw(gridbuttons["evictbutton"]["img2"], gridx, gridy, 0, 1, 1);
-			if love.mouse.isDown("l") then
+			if love.mouse.isDown(1) then
 				love.graphics.draw(gridbuttons["evictbutton"]["img3"], gridx, gridy, 0, 1, 1);
 			end
 		end
@@ -1292,7 +1304,7 @@ function renderComplaintButtons(x)
 				if mx >= gridx and mx < gridx + gridbuttons["complaintbutton"]["img1"]:getWidth()
 				and my >= gridy and my < gridy + gridbuttons["complaintbutton"]["img1"]:getHeight() then
 					love.graphics.draw(gridbuttons["complaintbutton"]["img2"], gridx, gridy, 0, 1, 1);
-					if love.mouse.isDown("l") then
+					if love.mouse.isDown(1) then
 						love.graphics.draw(gridbuttons["complaintbutton"]["img3"], gridx, gridy, 0, 1, 1);
 					end
 				end
@@ -1322,7 +1334,7 @@ function renderWindowButtons()
 						if mx >= gridx and mx < gridx + windowbuttons[1]["img1"]:getWidth()
 						and my >= gridy and my < gridy + windowbuttons[1]["img1"]:getHeight() then
 							love.graphics.draw(windowbuttons[1]["img2"], gridx, gridy, 0, 1, 1);
-							if love.mouse.isDown("l") then
+							if love.mouse.isDown(1) then
 								love.graphics.draw(windowbuttons[1]["img3"], gridx, gridy, 0, 1, 1);
 							end
 						end
@@ -1348,7 +1360,7 @@ function renderWindowButtons()
 				else
 					love.graphics.draw(windowbuttons[2]["img2"], gridx, gridy, 0, 1, 1);
 				end
-				if love.mouse.isDown("l") then
+				if love.mouse.isDown(1) then
 					if apartmentInfo[i]["full"] ~= 1 then
 						love.graphics.draw(windowbuttons[1]["img3"], gridx, gridy, 0, 1, 1);
 					else
@@ -1371,7 +1383,7 @@ function renderAptActionButtons(b)
 			if mx >= gridx and mx < gridx + gridbuttons[n]["img1"]:getWidth()
 			and my >= gridy and my < gridy + gridbuttons[n]["img1"]:getHeight() then
 				love.graphics.draw(gridbuttons[n]["img2"], gridx, gridy, 0, 1, 1);
-				if love.mouse.isDown("l") then
+				if love.mouse.isDown(1) then
 					love.graphics.draw(gridbuttons[n]["img3"], gridx, gridy, 0, 1, 1);
 				end
 			end
@@ -1411,7 +1423,7 @@ function renderUpgradeButton()
 	if mx >= gridx and mx < gridx + gridbuttons["upgradebutton"]["img1"]:getWidth()
 	and my >= gridy and my < gridy + gridbuttons["upgradebutton"]["img1"]:getHeight() then
 		love.graphics.draw(gridbuttons["upgradebutton"]["img2"], gridx, gridy, 0, 1, 1);
-		if love.mouse.isDown("l") then
+		if love.mouse.isDown(1) then
 			love.graphics.draw(gridbuttons["upgradebutton"]["img3"], gridx, gridy, 0, 1, 1);
 		end
 	end
@@ -1432,7 +1444,7 @@ function renderActionButtons()
 			if mx >= gridx and mx < gridx + gridbuttons[n]["img1"]:getWidth()
 			and my >= gridy and my < gridy + gridbuttons[n]["img1"]:getHeight() then
 				love.graphics.draw(gridbuttons[n]["img2"], gridx, gridy, 0, 1, 1);
-				if love.mouse.isDown("l") then
+				if love.mouse.isDown(1) then
 					love.graphics.draw(gridbuttons[n]["img3"], gridx, gridy, 0, 1, 1);
 				end
 			end
@@ -1509,7 +1521,7 @@ function renderYesNoButtons()
 		if mx >= gridx and mx < gridx + optionbuttons[i]["img1"]:getWidth()
 		and my >= gridy and my < gridy + optionbuttons[i]["img1"]:getHeight() then
 			love.graphics.draw(optionbuttons[i]["img2"], gridx, gridy, 0, 1, 1);
-			if love.mouse.isDown("l") then
+			if love.mouse.isDown(1) then
 				love.graphics.draw(optionbuttons[i]["img3"], gridx, gridy, 0, 1, 1);
 			end
 		end
@@ -1535,7 +1547,7 @@ function renderBlankButtons()
 					love.graphics.setColor(219,200,160,255)
 					love.graphics.printf(btext[i + x], gridx + 5, gridy + 12, width - 6, "center");
 					love.graphics.setColor(255,255,255,255)				
-					if love.mouse.isDown("l") then
+					if love.mouse.isDown(1) then
 						love.graphics.draw(optionbuttons[3]["img3"], gridx, gridy, 0, 1, 1);
 						love.graphics.setColor(219,200,160,255)
 						love.graphics.printf(btext[i + x], gridx + 5, gridy + 12, width - 6, "center"); 
@@ -1581,7 +1593,7 @@ function renderRentArrows(y)
 		if mx >= gridx and mx < gridx + arrowbuttons[i]["img1"]:getWidth()
 		and my >= gridy and my < gridy + arrowbuttons[i]["img1"]:getHeight() then
 			love.graphics.draw(arrowbuttons[i]["img2"], gridx, gridy, 0, 1, 1);
-			if love.mouse.isDown("l") then
+			if love.mouse.isDown(1) then
 				love.graphics.draw(arrowbuttons[i]["img3"], gridx, gridy, 0, 1, 1);
 			end
 		end
@@ -1598,7 +1610,7 @@ function renderNumberButtons()
 			if mx >= gridx and mx < gridx + numberbuttons[i]["img1"]:getWidth()
 			and my >= gridy and my < gridy + numberbuttons[i]["img1"]:getHeight() then
 				love.graphics.draw(numberbuttons[i]["img2"], gridx, gridy, 0, 1, 1);
-				if love.mouse.isDown("l") then
+				if love.mouse.isDown(1) then
 					love.graphics.draw(numberbuttons[i]["img3"], gridx, gridy, 0, 1, 1);
 				end
 			end
