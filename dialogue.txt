@@ -1,0 +1,22 @@
+Questions (Moving in)
+1."Why are you moving?"
+2."Tell me about your job."
+
+Answers (Moving in)
+1."I lost my job at the litter plant, and my new job doesn't pay as well, so I'm looking for something more affordable.",
+2."I just moved here for university and I need a cheap place to stay.",
+3."Why am I moving? Why are YOU moving!? I mean...ummm...nevermind bad joke.",
+4."Ugh what a boring question, no offence. I just hate how everyone is soooo boring!",
+5."I just switched jobs and I need somewhere that's closer to work. Commuting is the worst.",
+6."I have kittens on the way and I'm looking for a place to settle down. Somewhere warm and quiet.",
+7."Too many immigrants. They were taking over the neighbourhood! It just wasn't safe anymore for decent folk.",
+8."The neighbours in my last apartment were exceptionally noisy. They gave me headaches and the police were no help. Eventually I gave up."},
+
+1."My new job's pretty similar to the old one. It's hard work but the hours are regular. It's probably not great for my health to be breathing in all that dust, but what else am I going to do?",
+2."I don't have a job yet, but I'm hoping to get a part time gig soon. Just hope it doesn't affect my studies...",
+3."I, uh, I'm a cook. I work at a restaurant nearby. It's an ok restaurant, I guess, just don't eat the fish.",
+4."I'm a freelance journalist and fashion blogger. Have you read my blog? It's called The Catwalk.",
+5."I'm an insurance broker. Sounds boring, I know, but at least the pay's decent, and it's a regular 9-5.",
+6."I'm a teacher at Treebranch Academy. I also volunteer at a school for kittens with disabilities.",
+7."I'm a dentist. People always hate dentists, but that's because they don't know any better.",
+8."I'm a retired accountant. I'm living off my pension. Enjoying the fruits of my labour you might say."}}

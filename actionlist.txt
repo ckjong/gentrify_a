@@ -1,0 +1,73 @@
+show
+	#select tenant
+		(end turn) dialogue + stats
+		*yes
+		*no
+repair/exterminate/complaint
+	#select event
+		*do yourself
+		*hire
+upgrade
+	#select upgrade
+evict
+	#select tenant
+		(end turn) dialogue + possible bribe
+		*yes
+		*no
+talk
+	#select tenant
+		(end turn)
+		*select question
+		(show tenant stats)
+set rent
+	#select apartment
+		(if apt. empty)
+		*set amount
+		(if apt. not empty)
+		*set amount and send letter (takes 1 action over 1-3 turns)
+
+Bugs:
+Can click below event button and still triggers
+Dialogue doesn't change when talking to multiple cats during one turn
+Bug when sending multiple eviction notices (Yes button still appears but can't do anything)
+		
+TO DO:
+System:
+##Add ability to select apartment to show
+Have conflicting actions show up as greyed out, when you select new action it erases old one (started)
+Add possibility for multiple repair events/turn
+Add ability to set rent for full apts w/ risk of rejection
+Add happiness impact from noise
+Tweak happiness impact from racial diversity
+Add extra turn between when apartment empties and when it is available (started)
+Add bribes from tenants when evicting
+Add option to pressure tenants who owe money when talking
+	*add happiness indicator for tenants after talking for 5 turns
+Finish complaints system (started)
+	* fines increase every time complaint filed (started, cMult)
+	* talk to tenant to find out source of complaint
+Implement upgrades (started)
+Add game over condition/screen
+Add restart
+Add save system
+Add tips from landlord's association
+Balance game (currently too hard to make money, too many actions/not enough events)
+Add sounds
+Add music
+Hide income when tenant first shows up until end of turn (once action is spent), add ability to set rent when showing
+Add break-ins and security upgrades
+
+Interface:
+##Add bubbles for apartments to show events
+Add tooltip for apartments (possibly switch sides depending on where it is)
+Mouse button release without moving triggers, if moved outside button no triggers
+Highlight end turn button when out of actions
+Show action slots
+Show money change in brackets for current turn
+Add finished background
+Add animated cats/pedestrians
+Add garbage and graffiti
+Show apartment size when clicking on apt. window
+Highlight current action during end of turn
+Add option to resize window
+Add more text/feedback for when tenant is evictable
