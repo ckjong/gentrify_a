@@ -1,4 +1,6 @@
 --[[graphics]]--
+require "AnimatedSprite" --Including the file
+
 
 function love.load()
 
@@ -8,12 +10,26 @@ function love.load()
 	love.graphics.setNewFont("resources/fonts/pixelmix.ttf", 18)
  
 -- graphics
+	
+	catanim = GetInstance("catanim")
+	catanim.curr_anim = catanim.sprite.animations_names[4]
+	
+	walkx = 0
+	
+	local _newImage = love.graphics.newImage -- the old function
+	function love.graphics.newImage(...) -- new function. The ... is to forward any parameters to the old function
+		local img = _newImage(...)
+		img:setFilter('nearest', 'nearest')
+		return img
+	end
  
 	bgimage = love.graphics.newImage("resources/images/gentrify_bg_1024x768_lg.png")
 	overlay = love.graphics.newImage("resources/images/gentrify_bg_semitransoverlay.png")
 	greybgimage = love.graphics.newImage("resources/images/gentrify_greybg_1024x768.png")
 	blackbgimage = love.graphics.newImage("resources/images/gentrify_blackbg_1024x768.png")
 	grey1024x576 = love.graphics.newImage("resources/images/grey1024x576.png")
+	
+	
 	staticbuttons = {{name = "turnbutton", img1 = love.graphics.newImage("resources/images/nextturn2_2.png"), img2 = love.graphics.newImage("resources/images/nextturn2_1.png"), img3 = love.graphics.newImage("resources/images/nextturn2_0.png"), x = 872, y = 670, func = doNextTurn}}
 	
 	tenantbuttons = {{name = "Persian", img1 = love.graphics.newImage("resources/images/tenants01_greenbg_1.png")},
@@ -64,6 +80,7 @@ function love.load()
 	buttonid2 = 0
 	
 -- turns and actions
+-- currentState 1 = main, 7/1 = showing, 8/3 = evicting, 9/2 = talking, 10/4 = event, 11/5 = upgrading, 12/6 = complaint, 13 = set rent
 	turn = 0
 	turnCount = 0
 	endTurn = 0
@@ -75,8 +92,10 @@ function love.load()
 	conflictid = 0
 	conflictType = 0
 
+	
+	
 --[[tenants and apartments]]--
---status 1 = moved in, 1.1 = talking, 2 = owes money, 3 = moved out
+--status 0 = fresh, 0.5 = compatible with apartments, 0.6 = showing, 1 = moved in, 1.1 = talking, 2 = owes money, 3 = moved out,
 	tenantNew = {{name = "Nooks", income = 100, breed = "Abyssinian", sizepref = 1, happiness = 100, noise = 20, tolerance = 10, buffer = 0, status = 0, complaint = 0, owes = 0, talked = 0},
 				 {name = "Ryoko", income = 220, breed = "Maine Coon", sizepref = 1, happiness = 100, noise = 80, tolerance = 10, buffer = 0, status = 0, complaint = 0, owes = 0, talked = 0},
 				 {name = "Mr. Bubbles", income = 260, breed = "Abyssinian", sizepref = 1, happiness = 100, noise = 10, tolerance = 10, buffer = 0, status = 0, complaint = 0, owes = 0, talked = 0},
@@ -579,12 +598,14 @@ function newEventMainChance()
 local n =  tenantTotal + .01
 local x = n/(n^2+10*n)^(1/2)
 local y = math.random();
-	if math.random() < x then
+	if y < x then
 		eventMainToggle = 1;
-		eventN = 1;
-		print("Something happened");
-		if math.random() < y then
-			eventN = 2;
+		if tenantTotal > 2 then
+			eventN = math.random(1, 3);
+			print(eventN .. " events");
+		else
+			eventN = 1;
+			print("1 event");
 		end
 	else
 		print("No event");
@@ -1084,6 +1105,12 @@ function questionPrint()
 	print("buttonid2 "..buttonid2);
 	print("qA " .. qA);
 	print("qcount "..qCount); 
+	if tenantCurrent[buttonid2]["tenant"]["name"] ~= nil then
+		print(tenantCurrent[buttonid2]["tenant"]["name"])
+		else
+		error("no tenant info at index " .. buttonid2)
+	end
+	
 	text = ""
 	qCount = qCount + 1;
 	text = "You: " .. tenantTalkQuestions[qCount][1] .. "\n\n" .. tenantCurrent[buttonid2]["tenant"]["name"] .. ": " .. tenantTalkAnswers[qCount][qA]
@@ -1135,7 +1162,19 @@ function evictEndTurn()
 	text = tenantEvictDialogue[x] .. "\n\n\n Are you sure you still want to evict " .. actionsCurrent[#actionsCurrent]["tenant"]["name"] .. "?"
 end
 
+function updateWalk(t)
+	local width = love.graphics.getWidth();
+	if walkx < width + 8 then
+		walkx = walkx + t*12
+	else
+		walkx = 0
+	end
+end
+
 function love.update(dt)
+
+	UpdateInstance(catanim, dt)
+	updateWalk(dt)
 
     love.graphics.clear()
 	if #actionsCurrent > 0 then
@@ -1641,18 +1680,25 @@ function love.draw()
 
 	love.graphics.setColor(255,255,255,255)
 		
+	
 	local width = love.graphics.getWidth();
 	local height = love.graphics.getHeight();
-	local scalex = width/bgimage:getWidth();
-	local scaley = height/bgimage:getHeight();
+	local scalexbg = 2;
+	local scaleybg = 2;
+	local scalex = 1;
+	local scaley = 1;
+
 	
 	if globalState == 1 then
-		love.graphics.draw(bgimage, 0, 0, 0, scalex, scaley);
+		love.graphics.draw(bgimage, 0, 0, 0, scalexbg, scaleybg);
 		renderWindowButtons();
 		renderDoorButtons();
 		renderEventButtons();
+
+		DrawInstance(catanim, width - walkx, height - 240);
+		
 	elseif globalState == 2 then
-		love.graphics.draw(bgimage, 0, 0, 0, scalex, scaley);
+		love.graphics.draw(bgimage, 0, 0, 0, scalexbg, scaleybg);
 		love.graphics.draw(grey1024x576, 0, 0, 0, 1, 1);
 		love.graphics.setColor(219,200,160,255)
 		love.graphics.printf(text, 192, 160, 800, "left");
@@ -1679,7 +1725,7 @@ function love.draw()
 			love.graphics.setColor(255,255,255,255)
 		end
 	elseif globalState == 3 then
-		love.graphics.draw(bgimage, 0, 0, 0, scalex, scaley);
+		love.graphics.draw(bgimage, 0, 0, 0, scalexbg, scaleybg);
 		love.graphics.draw(grey1024x576, 0, 0, 0, 1, 1);
 		love.graphics.setColor(219,200,160,255)
 		if apartmentInfo[buttonid]["size"] == 1 then
@@ -1701,7 +1747,7 @@ function love.draw()
 			renderYesNoButtons();
 		end
 	elseif globalState == 4 then
-		love.graphics.draw(bgimage, 0, 0, 0, scalex, scaley);
+		love.graphics.draw(bgimage, 0, 0, 0, scalexbg, scaleybg);
 		love.graphics.draw(overlay, 0, 0, 0, scalex, scaley);
 		renderWindowButtons();
 	end
@@ -2477,6 +2523,16 @@ end
 
 function love.keypressed(key, unicode)
 -- 7/1 = showing, 8/3 = evicting, 9/2 = talking, 10/4 = event, 11/5 = upgrading, 12/6 = complaint, 13 = set rent
+
+	if globalState == 4 and key == "escape" then
+		for i = 1, #aI do
+			if aI[i]["tenant"]["status"] == 0.6 then
+				aI[i]["tenant"]["status"] = 0;
+			end
+		end
+		globalState = 1;
+		currentState = 0;
+	end
 
 --print info
 	if key == "p" then
